@@ -97,7 +97,9 @@ p{max-width:62ch}
   padding-top:env(safe-area-inset-top,0px)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:84px;gap:16px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.brand-logo{height:60px;width:auto}
+.brand-logo{height:60px;width:auto;transform-origin:50% 80%}
+@media (hover:hover){.brand:hover .brand-logo{animation:jelly .7s var(--spring)}}
+@keyframes jelly{0%{transform:none}20%{transform:scale(1.12,.88) rotate(-4deg)}45%{transform:scale(.94,1.08) rotate(3deg)}70%{transform:scale(1.04,.97) rotate(-1deg)}100%{transform:none}}
 .wm{white-space:nowrap;font-family:var(--display);font-size:1.6rem;line-height:1;letter-spacing:.02em;color:var(--pink);
   -webkit-text-stroke:5px var(--edge);paint-order:stroke fill}
 .wm i{font-style:normal;color:var(--sun-light)}
@@ -224,8 +226,9 @@ p{max-width:62ch}
 /* Sobre */
 .about{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,5vw,56px);align-items:center}
 @media (max-width:720px){.about{grid-template-columns:1fr}}
-.mascot{background:var(--sky);position:relative;overflow:visible!important;border:3px solid var(--edge-card);border-radius:28px;box-shadow:8px 8px 0 var(--edge);overflow:hidden;width:min(100%,420px)}
-.mascot .box-photo{width:100%;height:auto;aspect-ratio:442/553;object-fit:cover;border-radius:25px}
+.mascot{background:var(--sky);padding:clamp(14px,3vw,28px);border:3px solid var(--edge-card);border-radius:28px;box-shadow:8px 8px 0 var(--edge);overflow:hidden;width:min(100%,420px)}
+.mascot img{width:100%;height:auto;aspect-ratio:238/226.6;transform-origin:50% 100%}
+@media (hover:hover){.mascot:hover img{animation:jump .7s var(--spring)}}
 .about p{color:var(--ink-soft)}
 .about p + p{margin-top:14px}
 .about h2{margin-bottom:18px}
@@ -296,13 +299,13 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
 /* Perguntas frequentes */
 .faq{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
 @media (max-width:760px){.faq{grid-template-columns:1fr}}
-.faq details{background:var(--bg);border:3px solid var(--edge-card);border-radius:18px;transition:box-shadow .2s}
+.faq details{background:var(--bg);border:3px solid var(--edge-card);border-radius:18px}
 .faq details[open]{box-shadow:6px 6px 0 var(--edge)}
 .faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding:18px 22px;font-weight:800;font-size:1.08rem;min-height:56px}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"+";flex-shrink:0;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
-  background:var(--sun-light);color:#2B1A26;border:2px solid var(--edge-card);font-size:1.3rem;line-height:1;transition:transform .2s}
+  background:var(--sun-light);color:#2B1A26;border:2px solid var(--edge-card);font-size:1.3rem;line-height:1}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq details p{padding:0 22px 20px;color:var(--ink-soft)}
 
@@ -349,17 +352,8 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
 /* Confirmação do pedido */
 .form .done:not([hidden]){animation:fade .35s ease}
 
-/* Dúvidas: abre e fecha com altura animada (onde o navegador suporta) */
-.faq details::details-content{block-size:0;overflow:clip;transition:block-size .3s ease,content-visibility .3s allow-discrete}
-.faq details[open]::details-content{block-size:auto}
 
 /* Donzinho pula quando tocado */
-.mascot-btn{position:absolute;width:clamp(110px,30%,150px);right:-26px;bottom:-30px;}
-@media (max-width:760px){.mascot-btn{right:-10px;bottom:-24px}}
-.mascot-btn{filter:drop-shadow(0 6px 0 rgba(43,26,38,.2))}
-.mascot-btn img{width:100%;height:auto}
-.mascot-btn img{transform-origin:50% 100%}
-.mascot:hover .mascot-btn img,.mascot-btn.jump img{animation:jump .7s var(--spring)}
 @keyframes jump{0%{transform:none}20%{transform:scale(1.08,.9)}50%{transform:translateY(-16%) rotate(-6deg)}75%{transform:scale(1.05,.95)}100%{transform:none}}
 
 /* WhatsApp flutuante (mobile) */
@@ -656,7 +650,7 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
 
 <section class="sec" aria-labelledby="sobre-h">
   <div class="wrap about">
-    <div class="mascot"><img class="box-photo" src="assets/fotos/caixa-donzinho.webp" alt="Caixa da Dom Donuts com o Donzinho estampado, aberta com donuts confeitados" width="442" height="553" loading="lazy" decoding="async"><span class="mascot-btn" aria-hidden="true"><img src="assets/mascote.svg" alt="" width="150" height="143" loading="lazy"></span></div>
+    <div class="mascot"><img src="assets/mascote.svg" alt="Donzinho, o mascote da Dom Donuts: um donut rosa de boné vermelho fazendo joinha e segurando um mini donut" width="476" height="453" loading="lazy" decoding="async"></div>
     <div>
       <h2 id="sobre-h">Prazer, Donzinho.</h2>
       <p>A Dom Donuts nasceu de uma ideia simples: quem confeita não precisa perder tempo com massa e fritura. A gente cuida dessa parte, sempre com o mesmo padrão.</p>
@@ -880,21 +874,6 @@ document.getElementById("studio-cta").addEventListener("click", e=>{
   quote.obs.value = obs ? line + "\n" + obs : line;
   toForm(quote.nome);
 });
-
-/* ===== Dúvidas abrem ao passar o mouse ===== */
-if(matchMedia("(hover: hover) and (pointer: fine)").matches){
-  document.querySelectorAll(".faq details").forEach(d=>{
-    let t;
-    d.addEventListener("mouseenter", ()=>{ clearTimeout(t); t = setTimeout(()=>{ d.open = true; }, 120); });
-    d.addEventListener("mouseleave", ()=>{ clearTimeout(t); t = setTimeout(()=>{ d.open = false; }, 200); });
-  });
-}
-
-/* ===== Donzinho pula ===== */
-(function(){
-  const m = document.querySelector(".mascot-btn");
-  document.querySelector(".mascot").addEventListener("click", ()=>{ m.classList.remove("jump"); void m.offsetWidth; m.classList.add("jump"); });
-})();
 
 /* ===== Calculadora de caixas ===== */
 (function(){
