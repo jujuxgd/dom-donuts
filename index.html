@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/logo.svg" as="image" type="image/svg+xml">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Bakery","name":"Dom Donuts","description":"Fábrica de donuts. Massa de donut frita no dia, sem cobertura, pronta para confeitar.","email":"contato@domdonuts.com.br","telephone":"+55 19 98130-6819","logo":"assets/logo.svg","priceRange":"Sob orçamento"}
+{"@context":"https://schema.org","@type":"Bakery","name":"Dom Donuts","description":"Fábrica de donuts. Massa de donut frita no dia, sem cobertura, pronta para confeitar.","email":"contato@domdonuts.com.br","telephone":"+55 19 98130-6819","logo":"assets/logo.svg","priceRange":"Sob orçamento","sameAs":["https://www.instagram.com/domdonuts_fabrica/"]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -236,6 +236,7 @@ p{max-width:62ch}
 .cta h2{font-size:clamp(2.1rem,4.6vw,3.2rem)}
 .cta p{margin-top:10px;opacity:.95}
 .cta .btn{background:#FFFFFF;color:#B1236A}
+.cta .cta-ig a{color:inherit;font-weight:800}
 
 footer{position:relative;padding:44px 0 48px;font-size:.95rem;color:var(--ink-soft)}
 footer::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:var(--stripes)}
@@ -285,6 +286,60 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
   background:var(--sun-light);color:#2B1A26;border:2px solid var(--edge-card);font-size:1.3rem;line-height:1;transition:transform .2s}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq details p{padding:0 22px 20px;color:var(--ink-soft)}
+
+/* ===== Movimento =====
+   Um único momento orquestrado (a abertura do hero) e, fora isso,
+   só animações que respondem a uma ação da pessoa. */
+:root{interpolate-size:allow-keywords;--spring:cubic-bezier(.3,1.5,.5,1)}
+
+/* Abertura: o título entra, o donut cai na bancada, o Donzinho aparece */
+.hero h1 span{animation:rise .6s var(--spring) both}
+.hero h1 span + span{animation-delay:.14s}
+.hero .lede,.hero-actions,.hero-facts{animation:fade .5s ease both .3s}
+.hero-actions{animation-delay:.38s}.hero-facts{animation-delay:.46s}
+.studio-stage svg{transform-origin:50% 92%;animation:drop 1s both .35s}
+.peek{animation:peek .55s var(--spring) both 1.15s}
+@keyframes rise{from{opacity:0;transform:translateY(.45em) scale(.94)}}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}}
+@keyframes drop{
+  0%{opacity:0;transform:translateY(-70%)}
+  45%{opacity:1;transform:translateY(0) scale(1.1,.86)}
+  62%{transform:translateY(-7%) scale(.97,1.04)}
+  80%{transform:translateY(0) scale(1.03,.97)}
+  100%{transform:none}}
+@keyframes peek{from{opacity:0;transform:translateY(46px) rotate(-14deg)}}
+
+/* Resposta às escolhas do simulador */
+.studio-stage svg.wob{animation:wob .45s var(--spring)}
+@keyframes wob{30%{transform:scale(1.06,.94)}60%{transform:scale(.98,1.02)}}
+.sp{animation:fall .5s var(--spring) both}
+@keyframes fall{from{opacity:0;transform:translateY(-34px)}}
+.studio-caption.swap{animation:fade .3s ease}
+
+/* Calculadora: as caixas se empilham */
+.boxes{display:flex;flex-wrap:wrap;gap:6px;min-height:34px;align-items:flex-end}
+.box{width:34px;height:28px;border-radius:6px;background:var(--pink);border:2px solid var(--edge-card);position:relative;animation:boxin .35s var(--spring) both}
+.box::after{content:"";position:absolute;left:4px;right:4px;top:5px;height:3px;border-radius:2px;background:var(--sun-light)}
+.box.out{animation:boxout .2s ease forwards}
+.boxes .more{font-weight:800;color:var(--pink);align-self:center;margin-left:4px}
+@keyframes boxin{from{opacity:0;transform:translateY(-18px) scale(.6)}}
+@keyframes boxout{to{opacity:0;transform:scale(.4)}}
+.calc-out b.bump{display:inline-block;animation:bump .35s var(--spring)}
+@keyframes bump{40%{transform:scale(1.25)}}
+
+/* Confirmação do pedido */
+.form .done:not([hidden]){animation:fade .35s ease}
+
+/* Dúvidas: abre e fecha com altura animada (onde o navegador suporta) */
+.faq details::details-content{block-size:0;overflow:clip;transition:block-size .3s ease,content-visibility .3s allow-discrete}
+.faq details[open]::details-content{block-size:auto}
+
+/* Donzinho pula quando tocado */
+.mascot-btn{all:unset;display:block;cursor:pointer;border-radius:20px}
+.mascot-btn:focus-visible{outline:3px solid var(--pink);outline-offset:4px}
+.mascot-btn img{transform-origin:50% 100%}
+.mascot-btn.jump img{animation:jump .7s var(--spring)}
+@keyframes jump{0%{transform:none}20%{transform:scale(1.08,.9)}50%{transform:translateY(-16%) rotate(-6deg)}75%{transform:scale(1.05,.95)}100%{transform:none}}
 
 /* WhatsApp flutuante (mobile) */
 .fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;
@@ -472,6 +527,7 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
           <input id="calc-n" type="number" inputmode="numeric" min="1" step="1" value="100">
           <button class="step" type="button" data-step="28" aria-label="Mais 28 donuts">+</button>
         </div>
+        <div class="boxes" id="calc-boxes" aria-hidden="true"></div>
         <p class="calc-out" id="calc-out" aria-live="polite"></p>
         <button class="btn btn-pink" type="button" id="calc-use">Usar no pedido</button>
       </div>
@@ -575,7 +631,7 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
 
 <section class="sec" aria-labelledby="sobre-h">
   <div class="wrap about">
-    <div class="mascot"><img src="assets/mascote.svg" alt="Donzinho, o mascote da Dom Donuts: um donut rosa de boné vermelho fazendo joinha e segurando um mini donut" width="476" height="453" loading="lazy" decoding="async"></div>
+    <div class="mascot"><button class="mascot-btn" type="button" aria-label="Fazer o Donzinho pular"><img src="assets/mascote.svg" alt="Donzinho, o mascote da Dom Donuts: um donut rosa de boné vermelho fazendo joinha e segurando um mini donut" width="476" height="453" loading="lazy" decoding="async"></button></div>
     <div>
       <h2 id="sobre-h">Prazer, Donzinho.</h2>
       <p>A Dom Donuts nasceu de uma ideia simples: quem confeita não precisa perder tempo com massa e fritura. A gente cuida dessa parte, todo dia, com o mesmo padrão.</p>
@@ -603,6 +659,7 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
     <div>
       <h2>Bora pedir seu orçamento?</h2>
       <p>Massa fresca na sua bancada, pronta para confeitar.</p>
+      <p class="cta-ig">Quer ver antes? <a href="https://www.instagram.com/domdonuts_fabrica/" target="_blank" rel="noopener">Veja nossos donuts no Instagram</a>.</p>
     </div>
     <a class="btn js-wa" data-msg="Olá! Vim pelo site e quero um orçamento de donuts." href="#"><svg aria-hidden="true"><use href="#i-wa"/></svg>Chamar no WhatsApp</a>
   </div>
@@ -616,6 +673,7 @@ footer strong{color:var(--ink);font-family:var(--display);font-weight:400;font-s
     <div class="foot-links">
       <a class="js-wa" data-msg="Olá! Vim pelo site e quero um orçamento de donuts." href="#">WhatsApp (19) 98130-6819</a>
       <a href="mailto:contato@domdonuts.com.br">contato@domdonuts.com.br</a>
+      <a href="https://www.instagram.com/domdonuts_fabrica/" target="_blank" rel="noopener">Instagram @domdonuts_fabrica</a>
     </div>
   </div>
 </footer>
@@ -671,7 +729,7 @@ document.querySelectorAll(".js-wa").forEach(a=>{
     let g = "";
     for(let i=0;i<70;i++){
       const [x,y] = pointOnFrost(), rot = rand()*180;
-      g += `<rect x="${(x-6).toFixed(1)}" y="${(y-2).toFixed(1)}" width="12" height="4" rx="2" fill="${cols[i%cols.length]}" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      g += `<g class="sp" style="animation-delay:${i*9}ms"><rect x="${(x-6).toFixed(1)}" y="${(y-2).toFixed(1)}" width="12" height="4" rx="2" fill="${cols[i%cols.length]}" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/></g>`;
     }
     return g;
   }
@@ -679,7 +737,7 @@ document.querySelectorAll(".js-wa").forEach(a=>{
     let g = "";
     for(let i=0;i<220;i++){
       const [x,y] = pointOnFrost(), rot = rand()*180;
-      g += `<rect x="${(x-2.5).toFixed(1)}" y="${(y-1).toFixed(1)}" width="5" height="2" rx="1" fill="#FFFFFF" stroke="#D9C7AE" stroke-width=".6" opacity="${(.7+rand()*.3).toFixed(2)}" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      g += `<g class="sp" style="animation-delay:${i*3}ms"><rect x="${(x-2.5).toFixed(1)}" y="${(y-1).toFixed(1)}" width="5" height="2" rx="1" fill="#FFFFFF" stroke="#D9C7AE" stroke-width=".6" opacity="${(.7+rand()*.3).toFixed(2)}" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/></g>`;
     }
     return g;
   }
@@ -689,7 +747,10 @@ document.querySelectorAll(".js-wa").forEach(a=>{
   const frost = document.getElementById("frost"), fpath = document.getElementById("frost-path");
   const cap = document.getElementById("studio-cap"), cta = document.getElementById("studio-cta");
 
-  function render(){
+  const stageSvg = document.querySelector(".studio-stage svg");
+  function replay(el, cls){ el.classList.remove(cls); void el.getBoundingClientRect(); el.classList.add(cls); }
+  function render(user){
+    if(user){ stageSvg.style.animation = "none"; replay(stageSvg, "wob"); stageSvg.style.animation = ""; replay(cap, "swap"); }
     const on = state.frost !== "none";
     frost.classList.toggle("off", !on);
     if(on) fpath.setAttribute("fill", frostColors[state.frost]);
@@ -712,12 +773,12 @@ document.querySelectorAll(".js-wa").forEach(a=>{
   document.querySelectorAll("[data-frost]").forEach(b=>b.addEventListener("click",()=>{
     state.frost = b.dataset.frost;
     document.querySelectorAll("[data-frost]").forEach(x=>x.setAttribute("aria-pressed", x===b));
-    render();
+    render(true);
   }));
   document.querySelectorAll("[data-top]").forEach(b=>b.addEventListener("click",()=>{
     state.top = b.dataset.top;
     document.querySelectorAll("[data-top]").forEach(x=>x.setAttribute("aria-pressed", x===b));
-    render();
+    render(true);
   }));
   render();
 })();
@@ -777,17 +838,38 @@ document.getElementById("studio-cta").addEventListener("click", e=>{
   toForm(quote.nome);
 });
 
+/* ===== Donzinho pula ===== */
+(function(){
+  const m = document.querySelector(".mascot-btn");
+  m.addEventListener("click", ()=>{ m.classList.remove("jump"); void m.offsetWidth; m.classList.add("jump"); });
+})();
+
 /* ===== Calculadora de caixas ===== */
 (function(){
   const BOX = 28, n = document.getElementById("calc-n"), out = document.getElementById("calc-out");
-  let boxes = 0;
+  let boxes = 0, shown = 0;
+  const pile = document.getElementById("calc-boxes"), MAXB = 12;
+  function stack(){
+    const want = Math.min(boxes, MAXB);
+    pile.querySelector(".more")?.remove();
+    const live = [...pile.querySelectorAll(".box:not(.out)")];
+    for(let k = live.length; k < want; k++){
+      const d = document.createElement("span"); d.className = "box";
+      d.style.animationDelay = ((k - live.length) * 40) + "ms"; pile.append(d);
+    }
+    live.slice(want).forEach(d=>{ d.classList.add("out"); d.addEventListener("animationend", ()=>d.remove(), {once:true}); setTimeout(()=>d.remove(), 400); });
+    if(boxes > MAXB){ const m = document.createElement("span"); m.className = "more"; m.textContent = "+" + (boxes - MAXB); pile.append(m); }
+  }
   function calc(){
     const v = Math.max(0, Math.floor(+n.value || 0));
     boxes = Math.ceil(v / BOX);
     out.innerHTML = v
-      ? `<b>${boxes} ${boxes === 1 ? "caixa" : "caixas"}</b> por semana · ${boxes * BOX} donuts` +
+      ? `<b>${boxes} ${boxes === 1 ? "caixa" : "caixas"}</b> por semana, ${boxes * BOX} donuts no total` +
         (boxes * BOX - v ? ` (sobram ${boxes * BOX - v} para testar sabores)` : "")
       : "Digite quantos donuts você vende.";
+    const nb = out.querySelector("b");
+    if(nb && boxes !== shown){ nb.classList.add("bump"); }
+    shown = boxes; stack();
   }
   document.querySelectorAll("[data-step]").forEach(b=>b.addEventListener("click", ()=>{
     n.value = Math.max(BOX, (Math.floor(+n.value || 0)) + +b.dataset.step); calc();
